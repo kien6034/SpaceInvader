@@ -73,10 +73,10 @@ class Engine:
         while True: 
             pygame.time.delay(config.frame_delay)
             # 1. Receive player input
-            thurst, left, right, bullet = self.player.action(self.spaceship, [], [], self.fuel, self.score)
+            thrust, left, right, bullet = self.player.action(self.spaceship, [], [], self.fuel, self.score)
             
             # 2. Process game logic
-            if thurst:
+            if thrust:
                 self.spaceship.move_forward()
             elif left:
                 self.spaceship.turn_left()
