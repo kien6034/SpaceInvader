@@ -1,0 +1,6 @@
+python example_tests.py example_spaceobject_2 | diff - examples/example_spaceobject_2.out
+python example_tests.py example_spaceobject_3 | diff - examples/example_spaceobject_3.out
+python example_tests.py example_spaceobject_1 | diff - examples/example_spaceobject_1.out
+python example_tests.py example_game_basic_1 | diff - examples/example_game_basic_1.out
+python example_tests.py example_game_basic_2 | diff - examples/example_game_basic_2.out
+python example_tests.py example_game_basic_3 | diff - examples/example_game_basic_3.out

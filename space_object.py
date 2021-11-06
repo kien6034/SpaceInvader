@@ -5,7 +5,7 @@ import config
 import gui
 
 class SpaceObject:
-    def __init__(self, x, y, radius, angle, obj_type, id):
+    def __init__(self, x, y, radius, height,  angle, obj_type, id):
         self.x = x
         self.y = y
         self.radius = radius 
@@ -49,6 +49,6 @@ class SpaceObject:
         
         # Enter your code here
         # khong can phai viet 
-        return "TODO"
+        return f"{self.obj_type} {self.x}, {self.y},{self.angle},{self.id}"
     
     # You can add additional methods if required
