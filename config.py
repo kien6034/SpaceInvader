@@ -13,6 +13,7 @@ speed = {"spaceship": 10,
           "asteroid_small": 3, 
           "asteroid_large": 3}
 
+
 bullet_move_count = 5
 
 shoot_small_ast_score = 150

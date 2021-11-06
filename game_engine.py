@@ -1,3 +1,4 @@
+from pygame import constants
 import config
 from space_object import SpaceObject
 import pygame
@@ -17,6 +18,7 @@ class Engine:
         file1 = open(game_state_filename, "r")
         
         self.asteroids_ls = []
+        self.bullets_ls = []
 
         while True:
             line = file1.readline()
@@ -69,26 +71,63 @@ class Engine:
     def run_game(self):
         self.GUI.set_background(5, 100)
         pygame.display.update()
-
-        while True: 
-            pygame.time.delay(config.frame_delay)
-            # 1. Receive player input
-            thrust, left, right, bullet = self.player.action(self.spaceship, [], [], self.fuel, self.score)
-            
-            # 2. Process game logic
-            if thrust:
-                self.spaceship.move_forward()
-            elif left:
-                self.spaceship.turn_left()
-            elif right:
-                self.spaceship.turn_right()
-            elif bullet:
-                #Tạo bullet object vị trí tại vị trí của máy bay
-                #
-                pass 
         
+        while True: 
+            pygame.time.delay(int(config.frame_delay * 1000))
+            # 1. Receive player input
+            thrust, left, right, bullet = self.player.action(self.spaceship, self.asteroids_ls, self.bullets_ls, self.fuel, self.score)
+
+            #Fire the bullets 
+            for bullet in self.bullets_ls:
+            #if reach maximum bullet range 
+                if bullet.range == 150:
+                    self.bullets_ls.remove(bullet)
+                    continue
+
+                #Check collision of bullet with asteroids
+                for asteroid in self.asteroids_ls:
+                    isCollided = bullet.collide_with(asteroid)
+
+                    if isCollided:
+                        if asteroid.obj_type == "asteroid_small":
+                            self.score += config.shoot_small_ast_score
+                        
+                        elif asteroid.obj_type == "asteroid_large":
+                            self.score += config.shoot_large_ast_score
+
+                        #remove the bullet 
+                        self.bullets_ls.remove(bullet)
+
+                        #remove the asteroid 
+                        self.asteroids_ls.remove(asteroid) 
+                        
+                        
+
+                        #Create new asteroid
+                
+                #Move bullet forward 
+                bullet.move_forward()
+                bullet.range += config.speed['bullet']
+
+            #Handle offscreen cases of spaceship
+            if self.spaceship.y <= 0:
+                self.spaceship.y = self.height
+                self.spaceship.x = self.width - self.spaceship.x
+            elif self.spaceship.y >= self.height:
+                self.spaceship.y = 0
+                self.spaceship.x = self.width - self.spaceship.x
+            
+            
+            if self.spaceship.x <= 0: 
+                self.spaceship.x = self.width
+                self.spaceship.y = self.height - self.spaceship.y
+            
+            elif self.spaceship.x >= self.width:
+                self.spaceship.x = 0
+                self.spaceship.y = self.height - self.spaceship.y
+               
             # 3. Draw the game state on screen using the GUI class
-            self.GUI.update_frame(self.spaceship, self.asteroids_ls, [], self.score, self.fuel)
+            self.GUI.update_frame(self.spaceship, self.asteroids_ls, self.bullets_ls, self.score, self.fuel)
 
             # Game loop should stop when:
             # - the spaceship runs out of fuel, or
